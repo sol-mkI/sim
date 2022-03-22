@@ -1,11 +1,14 @@
 package entities.vegetals;
 
+import entities.Species;
 import environment.Tile;
 import utils.Utils;
 
 public class Carrot extends Vegetal{
     public Carrot(Tile tile) {
+
         super(tile);
+        species = Species.CARROT;
     }
 
     @Override

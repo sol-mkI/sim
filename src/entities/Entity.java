@@ -2,6 +2,8 @@ package entities;
 
 import java.util.ArrayList;
 import environment.Tile;
+import pathfinding.Point2D;
+
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +17,7 @@ public abstract class Entity implements Comparable<Entity> {
     // Base
     protected Tile tile;
     protected Species species;
-    private final List<Integer> priorityList = new ArrayList<>();
+    public final List<Integer> priorityList = new ArrayList<>();
 
     private final int maxHealth = Integer.MAX_VALUE;
     private int health = 20;
@@ -55,5 +57,10 @@ public abstract class Entity implements Comparable<Entity> {
 
     private void die() {
         tile.removeEntity(this);
+    }
+    public Point2D position() {return tile.getLocation();}
+
+    public Species specie() {
+        return species;
     }
 }

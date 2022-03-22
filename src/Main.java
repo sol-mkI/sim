@@ -18,7 +18,7 @@ public class Main extends Application {
         Thread test = new Thread(() -> {
 
             long start = System.nanoTime();
-            long rate = 10;
+            long rate = 5;
             for (long i = 0;; i++) {
                 Platform.runLater(simulation::update);
                 long end = start + i * 1000000000L / rate;

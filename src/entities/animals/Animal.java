@@ -25,14 +25,22 @@ public abstract class Animal extends Entity {
     @Override
     public void update() {
         updateDirection();
-        sensor.sense(consumables);
+
+           // else System.out.println(">>> " + tile.getLocation() + " " + target.position());
+
+    }
+
+    protected double calculateDistance(Point2D target) {
+        double ac = Math.abs(target.y - tile.getY());
+        double cb = Math.abs(target.x - tile.getX());
+        return Math.hypot(ac, cb);
     }
 
     private void updateDirection() {
         if (prevTile == null) prevTile = tile;
-        direction.x = Integer.compare(prevTile.getX(), tile.getX());
-        direction.y = Integer.compare(prevTile.getY(), tile.getY());
-        prevTile = tile;
+        //direction.x = Integer.compare(prevTile.getX(), tile.getX());
+        //direction.y = Integer.compare(prevTile.getY(), tile.getY());
+        //prevTile = tile;
     }
 
 }

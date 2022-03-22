@@ -8,6 +8,8 @@ import environment.Grid;
 import environment.Tile;
 import environment.ViewRenderer;
 import pathfinding.Point2D;
+
+import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Random;
 
@@ -52,8 +54,13 @@ public class Simulation implements ViewRenderer {
     }
 
     private void step() {
-        while (!pq.isEmpty())
-            pq.poll().update();
+        int i =0;
+        while (!pq.isEmpty()) {
+            i++;
+            Entity e = pq.poll();
+            //if (!e.priorityList.isEmpty() && e.priorityList.get(0) != 0.0) System.out.println("Entity " + i + " priorityList= " +e .priorityList);
+            e.update();
+        }
     }
 
     public Grid getGrid() {return grid;}
