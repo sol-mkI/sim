@@ -1,12 +1,10 @@
 package behaviour.tree;
 
-import behaviour.nodes.actions.FollowPath;
-import behaviour.nodes.actions.GetPath;
-import behaviour.nodes.actions.GetRandomPoint;
-import behaviour.nodes.actions.TargetSpecies;
+import behaviour.nodes.actions.*;
 import behaviour.nodes.composites.Selector;
 import behaviour.nodes.composites.Sequence;
 import behaviour.nodes.conditionals.IsPathValid;
+import behaviour.nodes.conditionals.IsTargetReached;
 import behaviour.nodes.conditionals.IsTargetValid;
 import behaviour.nodes.conditionals.SpeciesInRange;
 import behaviour.nodes.decorators.Repeater;
@@ -76,37 +74,54 @@ public class TestBehaviour extends BehaviourTree {
 
         SpeciesInRange speciesInRange = new SpeciesInRange();
         TargetSpecies targetSpecies = new TargetSpecies();
-        Sequence sequence = new Sequence();
-        sequence.children.add(speciesInRange);
-        sequence.children.add(targetSpecies);
+        Sequence rangecheck = new Sequence();
+        rangecheck.children.add(speciesInRange);
+        rangecheck.children.add(targetSpecies);
 
         IsTargetValid isTargetValid = new IsTargetValid();
         GetRandomPoint getRandomPoint = new GetRandomPoint();
-        Selector selector = new Selector();
-        selector.children.add(isTargetValid);
-        selector.children.add(getRandomPoint);
+        Selector randomPoint = new Selector();
+        randomPoint.children.add(isTargetValid);
+        randomPoint.children.add(getRandomPoint);
 
-        Selector selector1 = new Selector();
-        selector1.children.add(sequence);
-        selector1.children.add(selector);
+        Selector gettingTarget = new Selector();
+        gettingTarget.children.add(rangecheck);
+        gettingTarget.children.add(randomPoint);
 
+        IsTargetReached isTargetReached = new IsTargetReached();
         IsPathValid isPathValid = new IsPathValid();
         GetPath getPath = new GetPath();
-        Selector selector2 = new Selector();
-        selector2.children.add(isPathValid);
-        selector2.children.add(getPath);
-
         FollowPath followPath = new FollowPath();
-        Sequence sequence1 = new Sequence();
-        sequence1.children.add(selector2);
-        sequence1.children.add(followPath);
+        EatSpecies eatSpecies = new EatSpecies();
 
+        Sequence eatTarget = new Sequence();
+        eatTarget.children.add(isTargetReached);
+        eatTarget.children.add(eatSpecies);
+
+        Selector gettingPath = new Selector();
+        gettingPath.children.add(isPathValid);
+        gettingPath.children.add(getPath);
+
+        Sequence followingPath = new Sequence();
+        followingPath.children.add(gettingPath);
+        followingPath.children.add(followPath);
+
+        Selector goToTargetAndEat = new Selector();
+        goToTargetAndEat.children.add(eatTarget);
+        goToTargetAndEat.children.add(followingPath);
+
+        /*selector3.children.add(isTargetReached);
+        selector3.children.add(sequence1);
         Sequence sequence2 = new Sequence();
-        sequence2.children.add(selector1);
-        sequence2.children.add(sequence1);
+        sequence2.children.add(selector3);
+        sequence2.children.add(eatSpecies);*/
+
+        Sequence main = new Sequence();
+        main.children.add(gettingTarget);
+        main.children.add(goToTargetAndEat);
 
         Repeater repeater = new Repeater();
-        repeater.child = sequence2;
+        repeater.child = main;
 
         root = repeater;
 
@@ -119,7 +134,7 @@ public class TestBehaviour extends BehaviourTree {
         bb.food = new ArrayList<>();
         bb.food.add(Species.CARROT);
 
-        bb.visionRange = 5;
+        bb.visionRange = 20;
 
     }
 }

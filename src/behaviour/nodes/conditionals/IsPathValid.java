@@ -10,29 +10,54 @@ import pathfinding.Point2D;
 public class IsPathValid extends Leaf {
     @Override
     public void onStart() {
-        System.out.println("Checking if path is valid");
+        if (DEBUG) System.out.println("Checking if path is valid");
     }
 
     @Override
     public void onStop() {
-        System.out.println("IsPathValid = " + state);
+        if (DEBUG) System.out.println("IsPathValid = " + state);
     }
 
     @Override
     public State onUpdate() {
-        if (bb.path == null) return State.FAILURE;
-        if (!bb.path.get(bb.path.size() - 1).equals(bb.target)) return State.FAILURE;
+        if (bb.path == null) {
+            if (DEBUG) System.out.println("Exit 0");
+            return State.FAILURE;
+        }
+        if (bb.path.isEmpty()) {
+            if (DEBUG) System.out.println("Exit 1");
+            return State.FAILURE;
+        }
+        if (bb.target == null) {
+            if (DEBUG) System.out.println("Exit 2");
+            System.out.println("Can't check if path is valid without a target");
+            return State.FAILURE;
+        }
+        if (!bb.path.get(bb.path.size() - 1).equals(bb.target)) {
+            if (DEBUG) System.out.println("**********************************************************");
+            if (DEBUG) System.out.println("1-> " + bb.path);
+            if (DEBUG) System.out.println("2-> " + bb.path.size());
+            if (DEBUG) System.out.println("3-> " + bb.target);
+            if (DEBUG) System.out.println("Exit 3");
+            if (DEBUG) System.out.println("**********************************************************");
+
+            return State.FAILURE;
+        }
 
         for (Point2D p : bb.path) {
 
-            if (DEBUG) owner.tile().grid().tile(p).setColor(Color.AQUAMARINE);
+            if (DEBUG_COLOR) owner.tile().grid().tile(p).setColor(Color.AQUAMARINE);
 
             for (Entity e : owner.tile().grid().tile(p).getEntities()) {
                 if (bb.obstacles.stream().anyMatch(o -> e.specie().equals(o))) {
+                    if (DEBUG) System.out.println("Exit 4");
+
                     return State.FAILURE;
                 }
             }
         }
+        if (DEBUG) System.out.println("Exit 5");
+
         return State.SUCCESS;
     }
 }

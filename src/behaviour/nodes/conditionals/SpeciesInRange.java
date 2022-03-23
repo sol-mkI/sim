@@ -14,12 +14,12 @@ import java.util.List;
 public class SpeciesInRange extends Leaf {
     @Override
     public void onStart() {
-        System.out.println("Checking for species in Range");
+        if (DEBUG) System.out.println("Checking for species in Range");
     }
 
     @Override
     public void onStop() {
-        System.out.println("SpeciesInRange = " + state);
+        if (DEBUG) System.out.println("SpeciesInRange = " + state);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SpeciesInRange extends Leaf {
         if (owner.tile().grid().isCoordValid(target))
             if (origin.distance(target) < bb.visionRange) {
                 Tile tile = owner.tile().grid().tile(target);
-                tile.setColor(Color.DARKKHAKI);
+                if(DEBUG_COLOR) tile.setColor(Color.DARKKHAKI);
                 for (Entity entity : tile.getEntities())
                     if (species.contains(entity.getSpecies()))
                         entityList.add(entity);

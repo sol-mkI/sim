@@ -16,7 +16,7 @@ public class GetRandomPoint extends Leaf {
 
     @Override
     public void onStop() {
-        System.out.println("GetRandomPoint = " + state);
+        if (DEBUG) System.out.println("GetRandomPoint = " + state);
     }
 
     @Override

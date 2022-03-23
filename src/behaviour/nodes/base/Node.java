@@ -6,7 +6,8 @@ import entities.Entity;
 
 public abstract class Node {
 
-    protected static final boolean DEBUG = true;
+    protected static final boolean DEBUG = false;
+    protected static final boolean DEBUG_COLOR = false;
 
     public State state = State.RUNNING;
     public boolean started = false;

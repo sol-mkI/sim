@@ -6,36 +6,73 @@ import entities.Entity;
 import entities.Species;
 import environment.Tile;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import pathfinding.Point2D;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TargetSpecies extends Leaf {
     @Override
     public void onStart() {
-        System.out.println("Targeting nearest species.");
-
+        if (DEBUG) System.out.println("Targeting nearest species.");
     }
 
     @Override
     public void onStop() {
-        System.out.println("TargetSpecies = " + state);
-
+        if (DEBUG) System.out.println("TargetSpecies = " + state);
     }
 
     @Override
     public State onUpdate() {
-        List<Entity> entityList = checkArea();
+        List<Pair<Point2D, Integer>> list = spiralCheck();
 
-        if (entityList.isEmpty()) return State.FAILURE;
+        if (list.isEmpty()) return State.FAILURE;
+        bb.lastTarget = bb.target;
+        bb.target = list.get(0).getKey();
+        return State.SUCCESS;
+
+        /*if (entityList.isEmpty()) return State.FAILURE;
         else {
             bb.lastTarget = bb.target;
             bb.target = entityList.get(0).position();  // if need to process multiple targets, return entire list?
             return State.SUCCESS;
-        }
+        }*/
     }
 
+    public int distance(int x1, int x2, int y1, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int _min = Math.min(dx, dy);
+        int _max = Math.max(dx, dy);
+        return (int) (Math.sqrt(2) * _min) + (_max - _min);
+    }
+
+    private List<Pair<Point2D, Integer>> spiralCheck() {
+        List<Pair<Point2D, Integer>> points = new ArrayList<>();
+
+        Point2D o = owner.position();
+
+        for (int i = o.x - bb.visionRange; i < o.x + bb.visionRange; i++)
+            for (int j = o.y - bb.visionRange; j < o.y + bb.visionRange; j++) {
+
+                int distance = distance(o.x, i, o.y, j);
+                if (distance > bb.visionRange)
+                    continue;
+
+                if (!owner.tile().grid().isCoordValid(i,j))
+                    continue;
+
+                for (Entity entity : owner.tile().grid().tile(i,j).getEntities())
+                    if (bb.food.contains(entity.getSpecies()))
+                        points.add(new Pair<>(new Point2D(i,j), distance));
+            }
+
+        points.sort(Comparator.comparing(Pair::getValue));
+        return points;
+    }
+/*
     private List<Entity> checkArea() {
         List<Entity> entityList = new ArrayList<>();
         Point2D origin = owner.position();
@@ -55,5 +92,5 @@ public class TargetSpecies extends Leaf {
                     if (species.contains(entity.getSpecies()))
                         entityList.add(entity);
             }
-    }
+    }*/
 }

@@ -21,6 +21,7 @@ public class Sequence extends Composite {
     @Override
     public State onUpdate() {
         Node child = children.get(current);
+
         switch (child.update()) {
             case RUNNING:
                 return State.RUNNING;

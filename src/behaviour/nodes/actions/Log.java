@@ -7,12 +7,12 @@ public class Log extends Leaf {
     public String message;
     @Override
     public void onStart() {
-        System.out.println("OnStart{" + message + "}");
+        if (DEBUG) System.out.println("OnStart{" + message + "}");
     }
 
     @Override
     public void onStop() {
-        System.out.println("OnStop{" + message + "}");
+        if (DEBUG) System.out.println("OnStop{" + message + "}");
     }
 
     @Override
