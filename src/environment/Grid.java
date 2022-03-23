@@ -84,11 +84,17 @@ public class Grid implements Environment {
     public Tile tile(Point2D p) {
         return grid[p.x][p.y];
     }
+    public Tile tile(int x, int y) {
+        return grid[x][y];
+    }
     public Pane getContext() {
         return context;
     }
     public boolean isCoordValid(Point2D p) {
         return 0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y;
+    }
+    public boolean isCoordValid(int x, int y) {
+        return 0 <= x && x < size.x && 0 <= y && y < size.y;
     }
 
     //endregion
