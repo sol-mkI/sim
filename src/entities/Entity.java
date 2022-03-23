@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import environment.Tile;
 import pathfinding.Point2D;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -66,5 +67,16 @@ public abstract class Entity implements Comparable<Entity> {
 
     public void move(Tile tile) {
         this.tile = tile;
+    }
+    private int eaten = 0;
+    public void eat(Entity target) {
+        //TODO: Add benefit to entity eating.
+        target.die();
+        eaten++;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + eaten;
     }
 }
