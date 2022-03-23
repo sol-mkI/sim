@@ -1,16 +1,11 @@
 package entities.animals;
 
-import behaviour.BehaviourTree;
-import behaviour.TestBehaviour;
-import entities.Entity;
+import behaviour.tree.TestBehaviour;
 import entities.Species;
 import environment.Tile;
-import javafx.scene.paint.Color;
 import pathfinding.Point2D;
 
 import java.util.*;
-
-import static java.lang.Math.random;
 
 public class Rabbit extends Animal {
 
@@ -56,18 +51,18 @@ public class Rabbit extends Animal {
 
             sensor.move(tile, direction);
         }
-    }*/
+    }
 
     private void generateNewTarget() {
         do {
             t.move((int)(random() * tile.grid().getSize().x - 1), (int)(random() * tile.grid().getSize().y - 1));
         } while(tile.grid().tile(t).isObstacle());
-    }
+    }*/
 
 
     @Override
     public void computePriority() {
-        priorityList.clear();
+        /*priorityList.clear();
         List<Entity> targets = sensor.sense(consumables);
         for (Entity target : targets) {
             int distance = (int)calculateDistance(target.position());
@@ -78,6 +73,6 @@ public class Rabbit extends Animal {
                 priorityList.add(priorityMap.get(target.specie()));
             }
         }
-        priorityList.sort(Collections.reverseOrder());
+        priorityList.sort(Collections.reverseOrder());*/
     }
 }

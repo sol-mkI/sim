@@ -9,7 +9,7 @@ public class Pathfinder {
         this.env = env;
     }
 
-    public Collection<Point2D> findPath(Point2D o, Point2D t) {
+    public List<Point2D> findPath(Point2D o, Point2D t) {
         Node origin = env.getNode(o);
         Node target = env.getNode(t);
 
@@ -49,7 +49,7 @@ public class Pathfinder {
         return 14 * dx + 10 * (dy-dx);
     }
 
-    public Collection<Point2D> tracePath(Node origin, Node target) {
+    public List<Point2D> tracePath(Node origin, Node target) {
         List<Point2D> path = new ArrayList<>();
         Node actual = target;
         while (actual != origin) {

@@ -44,4 +44,14 @@ public class Point2D {
         return getClass().getSimpleName() + "{x=" + x + ",y=" + y + "}";
     }
 
+    public int distance(Point2D other) {
+        int dx = Math.abs(other.x - x);
+        int dy = Math.abs(other.y - y);
+
+        int _min = Math.min(dx, dy);
+        int _max = Math.max(dx, dy);
+
+        return (int) (Math.sqrt(2) * _min) + (_max - _min);
+    }
+
 }

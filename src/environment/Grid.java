@@ -49,7 +49,7 @@ public class Grid implements Environment {
 
 
     //region Pathfinding
-    public Collection<Point2D> requestPath(Point2D o, Point2D t) {
+    public List<Point2D> requestPath(Point2D o, Point2D t) {
         return pathfinder.findPath(o,t);
     }
     //endregion

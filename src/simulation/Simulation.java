@@ -26,8 +26,9 @@ public class Simulation implements ViewRenderer {
                         new Random(System.nanoTime()).nextInt(grid.getSize().x-1),
                         new Random(System.nanoTime()).nextInt(grid.getSize().y-1));
                 tile = grid.tile(p);
-            } while (!tile.isObstacle() && tile.getEntities().stream().noneMatch(e -> e instanceof Vegetal));
-            Entity entity = new Random(System.nanoTime()).nextDouble() < 0.5 ? new Carrot(tile) : new Rabbit(tile);
+            } while (tile.isObstacle() || tile.getEntities().stream().anyMatch(e -> e instanceof Vegetal));
+            Entity entity = new Random(System.nanoTime()).nextDouble() < 0.9 ? new Carrot(tile) : new Rabbit(tile);
+            //Rabbit entity =  new Rabbit(tile);
             tile.addEntity(entity);
         }
     }

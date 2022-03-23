@@ -100,7 +100,8 @@ public class Tile extends Node {
     @Override
     public String toString() {
         return "Tile{" +
-                "position=" + position +
+                "walkable=" + walkable +
+                ", position=" + position +
                 ", entityList=" + entityList +
                 '}';
     }
@@ -108,6 +109,7 @@ public class Tile extends Node {
     public void moveEntity(Entity entity, Point2D target) {
         //entityList.remove(entity);
         removeEntity(entity);
+        entity.move(grid.tile(target));
         grid.tile(target).addEntity(entity);
     }
 

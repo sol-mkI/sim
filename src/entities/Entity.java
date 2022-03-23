@@ -59,8 +59,12 @@ public abstract class Entity implements Comparable<Entity> {
         tile.removeEntity(this);
     }
     public Point2D position() {return tile.getLocation();}
-
     public Species specie() {
         return species;
+    }
+    public Tile tile() {return tile;}
+
+    public void move(Tile tile) {
+        this.tile = tile;
     }
 }
