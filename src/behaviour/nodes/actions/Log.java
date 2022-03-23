@@ -1,4 +1,7 @@
-package behaviour;
+package behaviour.nodes.actions;
+
+import behaviour.tree.State;
+import behaviour.nodes.base.Leaf;
 
 public class Log extends Leaf {
     public String message;

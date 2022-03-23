@@ -1,11 +1,16 @@
-package behaviour;
+package behaviour.nodes.base;
 
+import behaviour.tree.Blackboard;
+import behaviour.tree.State;
 import entities.Entity;
 
 public abstract class Node {
+
+    protected static final boolean DEBUG = true;
+
     public State state = State.RUNNING;
     public boolean started = false;
-    public Blackboard blackboard;
+    public Blackboard bb;
     public Entity owner;
 
     public State update() {

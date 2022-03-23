@@ -1,6 +1,9 @@
-package behaviour;
+package behaviour.nodes.decorators;
 
-public class Repeater extends Decorator{
+import behaviour.tree.State;
+import behaviour.nodes.base.Decorator;
+
+public class Repeater extends Decorator {
     @Override
     public void onStart() {
 

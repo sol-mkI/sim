@@ -1,9 +1,11 @@
-package behaviour;
+package behaviour.nodes.composites;
 
-public class Sequence extends Composite {
+import behaviour.tree.State;
+import behaviour.nodes.base.Composite;
+import behaviour.nodes.base.Node;
 
+public class Selector extends Composite {
     int current;
-
     @Override
     public void onStart() {
         current = 0;
@@ -20,12 +22,12 @@ public class Sequence extends Composite {
         switch (child.update()) {
             case RUNNING:
                 return State.RUNNING;
-            case FAILURE:
-                return State.FAILURE;
             case SUCCESS:
+                return State.SUCCESS;
+            case FAILURE:
                 current++;
                 break;
         }
-        return current == children.size() ? State.SUCCESS : State.RUNNING;
+        return current == children.size() ? State.FAILURE : State.RUNNING;
     }
 }

@@ -1,4 +1,4 @@
-package behaviour;
+package behaviour.tree;
 
 public enum State {
     RUNNING,

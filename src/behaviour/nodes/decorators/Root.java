@@ -1,6 +1,9 @@
-package behaviour;
+package behaviour.nodes.decorators;
 
-public class Root extends Node{
+import behaviour.tree.State;
+import behaviour.nodes.base.Node;
+
+public class Root extends Node {
 
     public Node child;
 
