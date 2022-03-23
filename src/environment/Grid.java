@@ -49,8 +49,8 @@ public class Grid implements Environment {
 
 
     //region Pathfinding
-    public List<Point2D> requestPath(Point2D o, Point2D t) {
-        return pathfinder.findPath(o,t);
+    public List<Point2D> requestPath(Entity entity, Point2D o, Point2D t) {
+        return pathfinder.findPath(o,t,entity );
     }
     //endregion
     //region Getters
@@ -61,13 +61,13 @@ public class Grid implements Environment {
             throw new CoordinateNotValidException(p);
         return grid[p.x][p.y];
     }
-    public Collection<Tile> getNeighbours(Node node) {
+    public List<Tile> getNeighbours(Node node) {
         List<Tile> neighbours = new ArrayList<>();
         for (int i = -1; i <= 1; i++)
             for (int j = -1; j <= 1; j++) {
                 if (i == 0 && j == 0)
                     continue;
-                Point2D p = node.getLocation();
+                Point2D p = node.location();
                 p.move(p.x + i, p.y + j);
                 if (0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y)
                     neighbours.add(tile(p));

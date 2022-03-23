@@ -3,34 +3,30 @@ package behaviour.nodes.actions;
 import behaviour.nodes.base.Leaf;
 import behaviour.tree.State;
 import entities.Entity;
+import entities.Species;
 
 public class EatSpecies extends Leaf {
     @Override
     public void onStart() {
-
+        //System.out.println("EAT");
     }
 
     @Override
     public void onStop() {
+        //System.out.println(state);
 
     }
 
     @Override
     public State onUpdate() {
-        Entity target = null;
-        // Get first entity with species in bb.food
-        for (Entity entity : owner.tile().getEntities())
-            if (bb.food.stream().anyMatch(e -> e.equals(entity.specie()))) {
-                target = entity;
-                break;
+        for (Entity entity : owner.tile().getEntities()) {
+            for (Species species : bb.food) {
+                if (entity.specie().equals(species)) {
+                    owner.eat(entity);
+                    return State.SUCCESS;
+                }
             }
-
-        if (target == null) {
-            System.out.println("Can't eat if there is no target");
-            return State.FAILURE;
         }
-        owner.eat(target);
-        System.out.println("Entity " + owner + " has eaten " + target);
-        return State.SUCCESS;
+        return State.FAILURE;
     }
 }

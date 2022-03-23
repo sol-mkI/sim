@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import environment.Tile;
 import pathfinding.Point2D;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -21,8 +20,8 @@ public abstract class Entity implements Comparable<Entity> {
     public final List<Integer> priorityList = new ArrayList<>();
 
     private final int maxHealth = Integer.MAX_VALUE;
-    private int health = 20;
-
+    protected int health = 20;
+    protected int size;
 
     public Entity(Tile tile) {
         this.tile = tile;
@@ -40,6 +39,45 @@ public abstract class Entity implements Comparable<Entity> {
         return species;
     }
 
+
+    public void recieveDamage(int amount) {
+        health -= amount;
+        if (health <= 0)
+            die();
+    }
+
+    protected void die() {
+        tile.removeEntity(this);
+    }
+    public Point2D position() {return tile.location();}
+    public Species specie() {
+        return species;
+    }
+    public Tile tile() {return tile;}
+
+    public void move(Tile tile) {
+        tryMove(tile);
+        this.tile = tile;
+    }
+
+    private void tryMove(Tile tile) {
+    }
+
+    private int eaten = 0;
+    public void eat(Entity target) {
+        //TODO: Add benefit to entity eating.
+        target.die();
+        eaten++;
+    }
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + eaten;
+    }
+
     @Override
     public int compareTo(Entity o) {
         for (int i = 0; i < min(priorityList.size(), o.priorityList.size()); i++) {
@@ -48,35 +86,5 @@ public abstract class Entity implements Comparable<Entity> {
                 return value;
         }
         return 0;
-    }
-
-    public void recieveDamage(int amount) {
-        health -= amount;
-        if (health <= 0)
-            die();
-    }
-
-    private void die() {
-        tile.removeEntity(this);
-    }
-    public Point2D position() {return tile.getLocation();}
-    public Species specie() {
-        return species;
-    }
-    public Tile tile() {return tile;}
-
-    public void move(Tile tile) {
-        this.tile = tile;
-    }
-    private int eaten = 0;
-    public void eat(Entity target) {
-        //TODO: Add benefit to entity eating.
-        target.die();
-        eaten++;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + eaten;
     }
 }

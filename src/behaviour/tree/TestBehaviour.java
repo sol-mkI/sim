@@ -3,10 +3,9 @@ package behaviour.tree;
 import behaviour.nodes.actions.*;
 import behaviour.nodes.composites.Selector;
 import behaviour.nodes.composites.Sequence;
-import behaviour.nodes.conditionals.IsPathValid;
 import behaviour.nodes.conditionals.IsTargetReached;
 import behaviour.nodes.conditionals.IsTargetValid;
-import behaviour.nodes.conditionals.SpeciesInRange;
+import behaviour.nodes.actions.SpeciesInRange;
 import behaviour.nodes.decorators.Repeater;
 import entities.Entity;
 import entities.Species;
@@ -19,60 +18,7 @@ public class TestBehaviour extends BehaviourTree {
         setupBlackboard();
         this.owner = owner;
 
-        /*Log log0 = new Log();
-        log0.message = "0";
-        Wait wait0 = new Wait();
-        wait0.duration = 1;
-        Log log1 = new Log();
-        log1.message = "1";
-        Wait wait1 = new Wait();
-        wait1.duration = 1;
-        Log log2 = new Log();
-        log2.message = "2";
-        Wait wait2 = new Wait();
-        wait2.duration = 1;
-
-        Sequence sequence = new Sequence();
-        sequence.children.add(log0);
-        sequence.children.add(wait0);
-        sequence.children.add(log1);
-        sequence.children.add(wait1);
-        sequence.children.add(log2);
-        sequence.children.add(wait2);
-
-        Repeater repeater = new Repeater();
-        repeater.child = sequence;
-
-        root = repeater;*/
-
-        /*// if species in range, go to species
-        // if not, go to random point
-        Selector selector = new Selector();
-        SpeciesInRange speciesInRange = new SpeciesInRange();
-        GetRandomPoint getRandomPoint = new GetRandomPoint();
-        selector.children.add(speciesInRange);
-        selector.children.add(getRandomPoint);
-
-        Sequence sequence = new Sequence();
-        GetPath getPath = new GetPath();
-        //IsPathValid isPathValid = new IsPathValid();
-        FollowPath followPath = new FollowPath();
-        sequence.children.add(getPath);
-        //sequence.children.add(isPathValid);
-        sequence.children.add(followPath);
-
-        Sequence sequence1 = new Sequence();
-        sequence1.children.add(selector);
-        sequence1.children.add(sequence);
-
-        Repeater repeater = new Repeater();
-        repeater.child = sequence1;
-
-        root = repeater;*/
-
-
-
-        SpeciesInRange speciesInRange = new SpeciesInRange();
+        /*SpeciesInRange speciesInRange = new SpeciesInRange();
         TargetSpecies targetSpecies = new TargetSpecies();
         Sequence rangecheck = new Sequence();
         rangecheck.children.add(speciesInRange);
@@ -89,7 +35,7 @@ public class TestBehaviour extends BehaviourTree {
         gettingTarget.children.add(randomPoint);
 
         IsTargetReached isTargetReached = new IsTargetReached();
-        IsPathValid isPathValid = new IsPathValid();
+        //IsPathValid isPathValid = new IsPathValid();
         GetPath getPath = new GetPath();
         FollowPath followPath = new FollowPath();
         EatSpecies eatSpecies = new EatSpecies();
@@ -98,30 +44,40 @@ public class TestBehaviour extends BehaviourTree {
         eatTarget.children.add(isTargetReached);
         eatTarget.children.add(eatSpecies);
 
-        Selector gettingPath = new Selector();
-        gettingPath.children.add(isPathValid);
-        gettingPath.children.add(getPath);
+        //Selector traversePath = new Selector();
+        //traversePath.children.add(isPathValid);
+        //traversePath.children.add(followPath);
 
-        Sequence followingPath = new Sequence();
-        followingPath.children.add(gettingPath);
-        followingPath.children.add(followPath);
+        Sequence movement = new Sequence();
+        movement.children.add(getPath);
+        movement.children.add(followPath);
 
         Selector goToTargetAndEat = new Selector();
         goToTargetAndEat.children.add(eatTarget);
-        goToTargetAndEat.children.add(followingPath);
-
-        /*selector3.children.add(isTargetReached);
-        selector3.children.add(sequence1);
-        Sequence sequence2 = new Sequence();
-        sequence2.children.add(selector3);
-        sequence2.children.add(eatSpecies);*/
+        goToTargetAndEat.children.add(movement);
 
         Sequence main = new Sequence();
         main.children.add(gettingTarget);
-        main.children.add(goToTargetAndEat);
+        main.children.add(goToTargetAndEat);*/
+
+        Selector s1 = new Selector();
+        SpeciesInRange speciesInRange =new SpeciesInRange();
+        GetRandomPoint getRandomPoint = new GetRandomPoint();
+        s1.children.add(speciesInRange);
+        s1.children.add(getRandomPoint);
+
+        GetPath getPath = new GetPath();
+        FollowPath followPath = new FollowPath();
+        EatSpecies eatSpecies = new EatSpecies();
+
+        Sequence q1 = new Sequence();
+        q1.children.add(s1);
+        q1.children.add(getPath);
+        q1.children.add(followPath);
+        q1.children.add(eatSpecies);
 
         Repeater repeater = new Repeater();
-        repeater.child = main;
+        repeater.child = q1;
 
         root = repeater;
 

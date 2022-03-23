@@ -1,6 +1,7 @@
 package environment;
 
 import entities.Entity;
+import entities.animals.Animal;
 import entities.vegetals.Vegetal;
 import pathfinding.Node;
 import pathfinding.Point2D;
@@ -19,7 +20,11 @@ public class Tile extends Node {
     private final TileContext tileContext;
     private final boolean walkable;
     private final Point2D position;
+
+
     private final List<Entity> entityList = new ArrayList<>();
+    private final int CAPACITY = 4;
+    private int currentSize = 0;
 
     public Tile(ViewRenderer viewRenderer, Grid grid, boolean walkable, Point2D position, int size) {
         this.viewRenderer = viewRenderer;
@@ -36,7 +41,13 @@ public class Tile extends Node {
         if (DEBUG)
             if (!entityList.isEmpty()) {
                 if (entityList.stream().noneMatch(e -> e instanceof Vegetal)) {
-                    tileContext.addColor(Color.CORNFLOWERBLUE);
+                    if (entityList.size() == 1)
+                        tileContext.addColor(Color.CORNFLOWERBLUE);
+                    else if (entityList.size() == 2)
+                        tileContext.addColor(Color.ROYALBLUE);
+                    else if (entityList.size() == 3)
+                        tileContext.addColor(Color.DARKSLATEBLUE);
+                    else tileContext.addColor(Color.VIOLET);
                 } else {
                     tileContext.addColor(Color.DARKSALMON);
 
@@ -47,43 +58,75 @@ public class Tile extends Node {
     }
 
     //region EntityManagement
+
     public void removeEntity(Entity entity) {
         entityList.remove(entity);
         viewRenderer.remove(entity);
+        currentSize -= entity.size();
+    }
+    public boolean addEntity(Entity entity) {
+        if (canFit(entity)) {
+            currentSize += entity.size();
+            return entityList.add(entity);
+        }
+        return false;
+    }
+    public boolean moveEntity(Entity entity, Point2D target) {
+        if (grid.tile(target).addEntity(entity)) {
+            removeEntity(entity);
+            entity.move(grid.tile(target));
+            return true;
+        }
+        return false;
+    }
+    public boolean canFit(Entity entity) {
+        return (currentSize + entity.size()) < CAPACITY;
     }
 
-    public void addEntity(Entity entity) {
-        // no limit of entities right now
-        entityList.add(entity);
-    }
+
+
     //endregion
     //region Getters
+
     public Collection<? extends Entity> getEntities() {
         return entityList;
     }
-
-    public Point2D getLocation() {
+    public Point2D location() {
         return position.getLocation();
+    }
+
+    @Override
+    public int penalty() {
+        // Makes pathfinder evade this node.
+        return entityList.size() * 10;
+        /*int penalty = 0;
+        for (Entity entity : getEntities()) {
+            penalty += entity instanceof Animal ? 1 : 0;
+        }
+
+        return penalty != 0 ? Integer.MAX_VALUE : 0;*/
     }
 
     public Grid grid() {
         return grid;
     }
-
     public boolean isObstacle() {
         return !walkable;
+    }
+
+    @Override
+    public boolean canTraverse(Entity entity) {
+        return canFit(entity);
     }
 
     @Override
     public int getX() {
         return position.x;
     }
-
     @Override
     public int getY() {
         return position.y;
     }
-
     public Pane getContext() {
         return tileContext;
     }
@@ -96,7 +139,6 @@ public class Tile extends Node {
     //endregion
     //region Misc
 
-
     @Override
     public String toString() {
         return "Tile{" +
@@ -106,12 +148,6 @@ public class Tile extends Node {
                 '}';
     }
 
-    public void moveEntity(Entity entity, Point2D target) {
-        //entityList.remove(entity);
-        removeEntity(entity);
-        entity.move(grid.tile(target));
-        grid.tile(target).addEntity(entity);
-    }
 
     //endregion
 }

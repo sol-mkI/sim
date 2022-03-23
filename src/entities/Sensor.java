@@ -1,19 +1,14 @@
 package entities;
 
-import java.util.HashMap;
 import java.util.List;
 
 import environment.Grid;
 import environment.Tile;
-import javafx.util.Pair;
 import pathfinding.Point2D;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.function.Function;
 
-//TODO: InProgress
-
+@Deprecated
 public class Sensor {
     private final Grid grid;
     private Tile origin;
@@ -95,8 +90,8 @@ public class Sensor {
         int ys = 1;
         for (int i = 0; i < sightDistance; i++) {
             for (int j = -ys; j <= ys; j++) {
-                Point2D p = new Point2D(origin.getLocation().x+i*mod, origin.getLocation().y+j);
-                checkPoint(species, entityList, origin.getLocation(), p, sightDistance);
+                Point2D p = new Point2D(origin.location().x+i*mod, origin.location().y+j);
+                checkPoint(species, entityList, origin.location(), p, sightDistance);
             }
             if (i%Math.abs(visionAngle) == 0)
                 if (visionAngle < 0) ys+=2;
@@ -110,7 +105,7 @@ public class Sensor {
         int ys = 1;
         for (int i = 0; i < sightDistance; i++) {
             for (int j = -ys; j <= ys; j++) {
-                Point2D k = origin.getLocation();
+                Point2D k = origin.location();
                 Point2D p = new Point2D(k.x+j, k.y+i*mod);
                 checkPoint(species, entityList, k, p, sightDistance);
             }
@@ -123,7 +118,7 @@ public class Sensor {
     }
     public List<Entity> senseDiagonal(List<Species> species, int mod1, int mod2) {
         int distance = 2;
-        Point2D p = origin.getLocation();
+        Point2D p = origin.location();
         List<Entity> entityList = new ArrayList<>();
 
         for (int h = 0; h < sightDistance/2 -1; h++) {

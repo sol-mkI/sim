@@ -1,7 +1,6 @@
 package entities.animals;
 
 import entities.Entity;
-import entities.Sensor;
 import entities.Species;
 import environment.Tile;
 import pathfinding.Point2D;
@@ -14,12 +13,12 @@ public abstract class Animal extends Entity {
     private Tile prevTile = null;
 
     protected List<Species> consumables = new ArrayList<>();
-    protected final Sensor sensor;
+    //protected final Sensor sensor;
     protected final Point2D direction = new Point2D();
 
     protected Animal(Tile tile) {
         super(tile);
-        sensor = new Sensor(tile.grid(), tile, 20, 5, 3);
+        //sensor = new Sensor(tile.grid(), tile, 20, 5, 3);
     }
 
     @Override

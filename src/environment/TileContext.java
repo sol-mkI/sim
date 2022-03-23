@@ -19,6 +19,7 @@ public class TileContext extends StackPane {
         getChildren().addAll(fill);
         setTranslateX(position.x * size);
         setTranslateY(position.y * size);
+
     }
 
     public void setColor(Color color) {

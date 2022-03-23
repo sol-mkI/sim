@@ -9,6 +9,7 @@ public class Carrot extends Vegetal{
 
         super(tile);
         species = Species.CARROT;
+        size = 0;
     }
 
     @Override
@@ -30,6 +31,6 @@ public class Carrot extends Vegetal{
     @Override
     public void update() {
         recieveDamage(1);
-        tryReproduce(rand.nextDouble() < 0.1);
+        tryReproduce(rand.nextDouble() < 0.10);
     }
 }

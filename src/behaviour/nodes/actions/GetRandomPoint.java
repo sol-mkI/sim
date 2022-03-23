@@ -12,17 +12,23 @@ public class GetRandomPoint extends Leaf {
     @Override
     public void onStart() {
         random = new Random(System.nanoTime());
+        //System.out.println("GET RANDOM");
     }
 
     @Override
     public void onStop() {
+        //System.out.println(state);
         if (DEBUG) System.out.println("GetRandomPoint = " + state);
     }
 
     @Override
     public State onUpdate() {
-        bb.lastTarget = bb.target;
-        bb.target = getWalkablePoint();
+        if (bb.randomTarget == null) {
+            bb.randomTarget = getWalkablePoint();
+        }
+        else if (owner.position().equals(bb.randomTarget)) {
+            bb.randomTarget = getWalkablePoint();
+        }
         return State.SUCCESS;
     }
 

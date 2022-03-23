@@ -1,6 +1,7 @@
 package simulation;
 
 import entities.Entity;
+import entities.animals.Animal;
 import entities.animals.Rabbit;
 import entities.vegetals.Carrot;
 import entities.vegetals.Vegetal;
@@ -9,9 +10,9 @@ import environment.Tile;
 import environment.ViewRenderer;
 import pathfinding.Point2D;
 
-import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Simulation implements ViewRenderer {
     private final Grid grid = new Grid(this,1800,900,100,50);
@@ -20,6 +21,7 @@ public class Simulation implements ViewRenderer {
     public void populateSimulation(int i) {
         Point2D p;
         Tile tile;
+        boolean rabbit = false;
         for (int j=0; j<i;j++) {
             do {
                 p = new Point2D(
@@ -27,15 +29,33 @@ public class Simulation implements ViewRenderer {
                         new Random(System.nanoTime()).nextInt(grid.getSize().y-1));
                 tile = grid.tile(p);
             } while (tile.isObstacle() || tile.getEntities().stream().anyMatch(e -> e instanceof Vegetal));
-            Entity entity = new Random(System.nanoTime()).nextDouble() < 0.9 ? new Carrot(tile) : new Rabbit(tile);
-            //Rabbit entity =  new Rabbit(tile);
+            Entity entity = new Random(System.nanoTime()).nextDouble() < 1 ? new Carrot(tile) : new Rabbit(tile);
+            if (!rabbit) {
+                tile.addEntity(new Rabbit(tile));
+                rabbit = true;
+            }
             tile.addEntity(entity);
         }
+
+
     }
+    long frame = 0;
     public void update() {
+        long t0 = System.nanoTime();
+        step();
         render();
         setupEntities();
-        step();
+        long t1 = System.nanoTime();
+
+        AtomicInteger a = new AtomicInteger(0);
+        AtomicInteger v = new AtomicInteger(0);
+        pq.forEach(e -> {
+            if (e instanceof Animal)
+                a.getAndIncrement();
+            if (e instanceof Vegetal)
+                v.getAndIncrement();
+        });
+        System.out.println("F" + ++frame + " in " + (t1-t0)/1e6 + " ms.    " + a + " animals and " + v + " vegetals.");
     }
 
     @Override
@@ -55,13 +75,8 @@ public class Simulation implements ViewRenderer {
     }
 
     private void step() {
-        int i =0;
-        while (!pq.isEmpty()) {
-            i++;
-            Entity e = pq.poll();
-            //if (!e.priorityList.isEmpty() && e.priorityList.get(0) != 0.0) System.out.println("Entity " + i + " priorityList= " +e .priorityList);
-            e.update();
-        }
+        while (!pq.isEmpty())
+            pq.poll().update();
     }
 
     public Grid getGrid() {return grid;}
