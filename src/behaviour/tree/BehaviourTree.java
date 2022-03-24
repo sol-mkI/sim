@@ -15,7 +15,6 @@ public class BehaviourTree {
     public Entity owner;
     public Blackboard bb = new Blackboard();
 
-    //public List<Node> nodes = new ArrayList<>();
 
     public State update() {
         if (root.state == State.RUNNING) {
@@ -24,51 +23,6 @@ public class BehaviourTree {
         return state;
     }
 
-    /*public Node createNode(Class<?> c) throws InstantiationException, IllegalAccessException {
-        Node node = (Node) c.newInstance();
-        nodes.add(node);
-        return node;
-    }
-
-    public void deleteNode(Node node) {
-        nodes.remove(node);
-    }
-
-    public void addChild(Node parent, Node child) {
-        if (parent instanceof Decorator) {
-            Decorator decorator = (Decorator) parent;
-            decorator.child = child;
-        }
-
-        if (parent instanceof Root) {
-            Root root = (Root) parent;
-            root.child = child;
-        }
-
-        if (parent instanceof Composite) {
-            Composite composite = (Composite) parent;
-            composite.children.add(child);
-        }
-
-    }
-
-    public void removeChild(Node parent, Node child) {
-        if (parent instanceof Decorator) {
-            Decorator decorator = (Decorator) parent;
-            decorator.child = null;
-        }
-
-        if (parent instanceof Root) {
-            Root root = (Root) parent;
-            root.child = null;
-        }
-
-        if (parent instanceof Composite) {
-            Composite composite = (Composite) parent;
-            composite.children.remove(child);
-        }
-    }
-*/
     public List<Node> getChildren(Node parent) {
         List<Node>  children = new ArrayList<>();
         if (parent instanceof Decorator) {
