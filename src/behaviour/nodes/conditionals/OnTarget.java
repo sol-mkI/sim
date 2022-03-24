@@ -1,23 +1,22 @@
 package behaviour.nodes.conditionals;
 
-import behaviour.tree.State;
 import behaviour.nodes.base.Leaf;
-import entities.Entity;
+import behaviour.tree.State;
 
-public class IsTargetValid extends Leaf {
+public class OnTarget extends Leaf {
     @Override
     public void onStart() {
-        if (DEBUG) System.out.println(getClass().getSimpleName() + " ");
+        if (DEBUG) System.out.print(getClass().getSimpleName() + " ");
     }
 
     @Override
     public void onStop() {
-        if (DEBUG) System.out.println(state);
+        if (DEBUG) System.out.print(state);
     }
 
     @Override
     public State onUpdate() {
-        if (bb.target == null)
+        if (!owner.position().equals(bb.target))
             return State.FAILURE;
         return State.SUCCESS;
     }

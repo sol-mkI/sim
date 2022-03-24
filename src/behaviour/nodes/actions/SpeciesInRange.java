@@ -4,42 +4,81 @@ import behaviour.tree.State;
 import behaviour.nodes.base.Leaf;
 import entities.Entity;
 import entities.Species;
-import environment.Tile;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import pathfinding.Point2D;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 
 // Target first food species in range.
 // If no food target is null.
 
 public class SpeciesInRange extends Leaf {
+
+    private Point2D pos;
+    private final int range;
+    private final int ITERATIONS;
+    private final List<Species> toCheck;
+
+    public SpeciesInRange(int range, Species... toCheck) {
+        this.range = range;
+        this.toCheck = Arrays.asList(toCheck);
+        ITERATIONS = range * (-4 + 4*range);
+    }
+
     @Override
     public void onStart() {
-        //System.out.println("Checking for species in Range");
+        if (DEBUG) System.out.print(getClass().getSimpleName() + " ");
+        pos = owner.position();
     }
 
     @Override
     public void onStop() {
-        //System.out.println(state);
-        if (DEBUG) System.out.println("SpeciesInRange = " + state);
+        if (DEBUG) System.out.println(state);
     }
 
     @Override
     public State onUpdate() {
-        List<Pair<Point2D, Integer>> entityList = spiralCheck();
+        List<Point2D> entityList = spiralIteration();
 
-        if (entityList.isEmpty()) {
-            bb.target = null;
+        if (entityList.isEmpty())
             return State.FAILURE;
-        }
-        bb.target = entityList.get(0).getKey();
-        return State.SUCCESS;
 
+        bb.target = entityList.get(0);
+        return State.SUCCESS;
+    }
+
+    private List<Point2D> spiralIteration() {
+
+        List<Point2D> pointList = new LinkedList<>();
+
+        int deltaX = 1, deltaY = 0;
+        int segmentLength = 1;
+
+        int x = pos.x, y = pos.y;
+        int segmentPassed = 0;
+
+        for (int k = 0; ITERATIONS > k; ++k) {
+            x += deltaX;
+            y += deltaY;
+            ++segmentPassed;
+
+            if (checkPoint(pointList, x, y))
+                break;
+
+            if (segmentPassed == segmentLength) {
+                segmentPassed = 0;
+
+                int aux = deltaX;
+                deltaX = -deltaY;
+                deltaY = aux;
+
+                if (deltaY == 0)
+                    ++segmentLength;
+            }
+        }
+        return pointList;
     }
 
     public int distance(int x1, int x2, int y1, int y2) {
@@ -50,6 +89,7 @@ public class SpeciesInRange extends Leaf {
         return (int) (Math.sqrt(2) * _min) + (_max - _min);
     }
 
+    /*@Deprecated
     private List<Pair<Point2D, Integer>> spiralCheck() {
         List<Pair<Point2D, Integer>> points = new ArrayList<>();
 
@@ -72,26 +112,27 @@ public class SpeciesInRange extends Leaf {
 
         points.sort(Comparator.comparing(Pair::getValue));
         return points;
-    }
-
-    /*private List<Entity> checkArea() {
-        List<Entity> entityList = new ArrayList<>();
-        Point2D origin = owner.position();
-        for (int i = origin.x - bb.visionRange; i < origin.x + bb.visionRange; i++)
-            for (int j = origin.y - bb.visionRange; j < origin.y + bb.visionRange; j++) {
-                Point2D target = new Point2D(i, j);
-                checkPoint(bb.food, entityList, origin, target);
-            }
-        return entityList;
-    }
-    private void checkPoint(List<Species> species, List<Entity> entityList, Point2D origin, Point2D target) {
-        if (owner.tile().grid().isCoordValid(target))
-            if (origin.distance(target) < bb.visionRange) {
-                Tile tile = owner.tile().grid().tile(target);
-                //if(DEBUG_COLOR) tile.setColor(Color.DARKKHAKI);
-                for (Entity entity : tile.getEntities())
-                    if (species.contains(entity.getSpecies()))
-                        entityList.add(entity);
-            }
     }*/
+
+    // Only returns the first target
+    private boolean checkPoint(List<Point2D> pointList, int x, int y) {
+
+
+        if (!owner.tile().grid().isCoordValid(x,y))
+            return false;
+
+        int distance = distance(pos.x, x, pos.y, y);
+        if (distance > range)
+            return false;
+
+        if (DEBUG_COLOR) owner.tile().grid().tile(new Point2D(x,y)).setColor(Color.DARKKHAKI);
+
+        for (Entity entity : owner.tile().grid().tile(x,y).getEntities())
+            if (toCheck.contains(entity.getSpecies())) {
+                pointList.add(new Point2D(x,y));
+                return true;
+            }
+
+        return false;
+    }
 }

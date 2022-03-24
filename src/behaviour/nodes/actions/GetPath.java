@@ -3,43 +3,36 @@ package behaviour.nodes.actions;
 import behaviour.tree.State;
 import behaviour.nodes.base.Leaf;
 import javafx.scene.paint.Color;
-import org.omg.PortableInterceptor.SUCCESSFUL;
 import pathfinding.Point2D;
 
-import java.util.List;
-
 public class GetPath extends Leaf {
+
+    private Point2D target;
+
     @Override
     public void onStart() {
-        //System.out.println("Get Path");
+        if (DEBUG) System.out.print(getClass().getSimpleName() + " ");
+        this.target = bb.target;
     }
 
     @Override
     public void onStop() {
-        //System.out.println(state);
-
-        if (DEBUG) System.out.println("GetPath = " + state);
+        if (DEBUG) System.out.print(state);
+        target = null;
     }
 
     @Override
     public State onUpdate() {
-        if (bb.target != null) {
-            if (bb.path != null && !bb.path.isEmpty())
-                if (bb.target.equals(bb.path.get(bb.path.size() - 1)))
-                    return State.SUCCESS;
-            requestPath(bb.target);
-            return bb.path != null ? State.SUCCESS : State.FAILURE;
-        }
+        if (target == null) return State.FAILURE;
 
-        if (bb.randomTarget != null) {
-            if (bb.path != null && !bb.path.isEmpty())
-                if (bb.randomTarget.equals(bb.path.get(bb.path.size() - 1)))
-                    return State.SUCCESS;
-            requestPath(bb.randomTarget);
-            return bb.path != null ? State.SUCCESS : State.FAILURE;
-        }
+        if (bb.path != null &&
+            !bb.path.isEmpty() &&
+            target.equals(bb.path.get(bb.path.size() - 1)))
+            return State.SUCCESS;
 
-        return State.FAILURE;
+        requestPath(target);
+        return bb.path != null ? State.SUCCESS : State.FAILURE;
+
     }
 
     private void requestPath(Point2D p) {

@@ -20,7 +20,7 @@ public abstract class Entity implements Comparable<Entity> {
     public final List<Integer> priorityList = new ArrayList<>();
 
     private final int maxHealth = Integer.MAX_VALUE;
-    protected int health = 20;
+    protected int health;
     protected int size;
 
     public Entity(Tile tile) {
@@ -64,10 +64,12 @@ public abstract class Entity implements Comparable<Entity> {
     }
 
     private int eaten = 0;
-    public void eat(Entity target) {
+    public boolean eat(Entity target) {
         //TODO: Add benefit to entity eating.
         target.die();
         eaten++;
+        //?Failed eating?
+        return true;
     }
     public int size() {
         return size;

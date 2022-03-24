@@ -1,5 +1,5 @@
 package entities;
 
 public enum Species {
-    CARROT, RABBIT
+    CARROT, FOX, EAGLE, HUNTER, RABBIT
 }

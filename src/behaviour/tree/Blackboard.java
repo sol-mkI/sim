@@ -9,6 +9,7 @@ public class Blackboard {
     public Point2D target;
     public Point2D lastTarget;
     public Point2D randomTarget;
+    public Point2D foodTarget;
 
     public List<Point2D> path;
     public List<Species> obstacles;

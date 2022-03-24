@@ -22,7 +22,7 @@ public class Rabbit extends Animal {
         consumables.add(Species.CARROT);
         species = Species.RABBIT;
         size = 1;
-        health = 200;
+        health = 100;
     }
 
     @Override
@@ -52,12 +52,13 @@ public class Rabbit extends Animal {
     }
 
     @Override
-    public void eat(Entity target) {
+    public boolean eat(Entity target) {
         super.eat(target);
-        health += 100;
+        health += 10;
         Tile t = Utils.random(tile.grid().getNeighbours(tile));
         if (!t.isObstacle())
             t.addEntity(new Rabbit(t));
+        return true;
     }
 
     public int distance(int x1, int x2, int y1, int y2) {

@@ -34,7 +34,11 @@ public class Grid implements Environment {
     private void generateTiles(ViewRenderer viewRenderer) {
         for (int i = 0; i < size.x; i++) {
             for (int j = 0; j < size.y; j++) {
-                Tile tile = new Tile(viewRenderer, this,new Random(System.nanoTime()).nextDouble() > 0.2, new Point2D(i,j), nodeSize);
+                Tile tile = new Tile(viewRenderer,
+                 this,
+              new Random(System.nanoTime()).nextDouble() > 0.1, new Point2D(i,j),
+                      nodeSize);
+
                 grid[i][j] = tile;
                 context.getChildren().add(grid[i][j].getContext());
             }

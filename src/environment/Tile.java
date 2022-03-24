@@ -23,7 +23,7 @@ public class Tile extends Node {
 
 
     private final List<Entity> entityList = new ArrayList<>();
-    private final int CAPACITY = 4;
+    private final static int CAPACITY = 5;
     private int currentSize = 0;
 
     public Tile(ViewRenderer viewRenderer, Grid grid, boolean walkable, Point2D position, int size) {

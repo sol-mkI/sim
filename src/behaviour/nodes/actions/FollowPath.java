@@ -11,12 +11,12 @@ public class FollowPath extends Leaf {
 
     @Override
     public void onStart() {
-        ///System.out.println("Following Path");
+        if (DEBUG) System.out.print(getClass().getSimpleName() + " ");
     }
 
     @Override
     public void onStop() {
-        //System.out.println(state);
+        if (DEBUG) System.out.print(state);
     }
 
     @Override

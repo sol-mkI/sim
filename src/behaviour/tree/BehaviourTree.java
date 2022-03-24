@@ -40,6 +40,8 @@ public class BehaviourTree {
         if (parent instanceof Composite) {
             Composite composite = (Composite) parent;
             return composite.children;
+            /*if (composite.children != null)
+                children.add(composite.child);*/
         }
         return children;
     }

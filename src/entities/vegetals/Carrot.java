@@ -6,8 +6,8 @@ import utils.Utils;
 
 public class Carrot extends Vegetal{
     public Carrot(Tile tile) {
-
         super(tile);
+        health = 40;
         species = Species.CARROT;
         size = 0;
     }
@@ -31,6 +31,6 @@ public class Carrot extends Vegetal{
     @Override
     public void update() {
         recieveDamage(1);
-        tryReproduce(rand.nextDouble() < 0.10);
+        tryReproduce(rand.nextDouble() < 0.04);
     }
 }
