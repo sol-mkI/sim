@@ -1,7 +1,7 @@
 package behaviour.nodes.decorators;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Decorator;
+import behaviour.nodes.Decorator;
 
 public class Repeater extends Decorator {
     @Override

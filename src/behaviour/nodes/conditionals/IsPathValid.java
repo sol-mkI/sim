@@ -1,8 +1,6 @@
 package behaviour.nodes.conditionals;
 import behaviour.tree.State;
-import behaviour.nodes.base.Leaf;
-import entities.Entity;
-import javafx.scene.paint.Color;
+import behaviour.nodes.Leaf;
 import pathfinding.Point2D;
 
 // Checks if there is an obstacle (non-traversable species) in the path.

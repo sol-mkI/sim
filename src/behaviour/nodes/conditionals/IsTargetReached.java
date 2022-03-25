@@ -1,6 +1,6 @@
 package behaviour.nodes.conditionals;
 
-import behaviour.nodes.base.Leaf;
+import behaviour.nodes.Leaf;
 import behaviour.tree.State;
 
 public class IsTargetReached extends Leaf {

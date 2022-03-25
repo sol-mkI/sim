@@ -1,4 +1,4 @@
-package behaviour.nodes.base;
+package behaviour.nodes;
 
 public abstract class Leaf extends Node {
 

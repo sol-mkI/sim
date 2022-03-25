@@ -1,8 +1,8 @@
 package behaviour.tree;
 
-import behaviour.nodes.base.Composite;
-import behaviour.nodes.base.Decorator;
-import behaviour.nodes.base.Node;
+import behaviour.nodes.Composite;
+import behaviour.nodes.Decorator;
+import behaviour.nodes.Node;
 import behaviour.nodes.decorators.Root;
 import entities.Entity;
 
@@ -40,8 +40,6 @@ public class BehaviourTree {
         if (parent instanceof Composite) {
             Composite composite = (Composite) parent;
             return composite.children;
-            /*if (composite.children != null)
-                children.add(composite.child);*/
         }
         return children;
     }

@@ -1,8 +1,7 @@
 package behaviour.nodes.conditionals;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Leaf;
-import entities.Entity;
+import behaviour.nodes.Leaf;
 
 public class IsTargetValid extends Leaf {
     @Override

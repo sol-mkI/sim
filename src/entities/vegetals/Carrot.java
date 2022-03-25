@@ -16,7 +16,9 @@ public class Carrot extends Vegetal{
     void tryReproduce(boolean b) {
         if (b) {
             Tile targetTile = Utils.random(tile.grid().getNeighbours(tile));
-            if (!targetTile.isObstacle() && targetTile.getEntities().stream().noneMatch(e -> e instanceof Vegetal)) {
+            if (!targetTile.isObstacle() &&
+                targetTile.getEntities().stream().noneMatch(e -> e instanceof Vegetal)) {
+
                 Carrot carrot = new Carrot(targetTile);
                 targetTile.addEntity(carrot);
             }
@@ -24,13 +26,11 @@ public class Carrot extends Vegetal{
     }
 
     @Override
-    public void computePriority() {
-        super.computePriority();
-    }
+    public void computePriority() {}
 
     @Override
     public void update() {
         recieveDamage(1);
-        tryReproduce(rand.nextDouble() < 0.04);
+        tryReproduce(rand.nextDouble() < 0.05);
     }
 }

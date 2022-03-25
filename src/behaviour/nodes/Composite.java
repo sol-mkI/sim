@@ -1,4 +1,4 @@
-package behaviour.nodes.base;
+package behaviour.nodes;
 
 import java.util.ArrayList;
 import java.util.List;

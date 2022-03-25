@@ -79,7 +79,7 @@ public class Sensor {
                 Tile tile = grid.tile(k);
                 tile.setColor(Color.DARKKHAKI);
                 for (Entity entity : tile.getEntities())
-                    if (species.contains(entity.getSpecies()))
+                    if (species.contains(entity.specie()))
                         entityList.add(entity);
             }
         }

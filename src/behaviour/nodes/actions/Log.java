@@ -1,7 +1,7 @@
 package behaviour.nodes.actions;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Leaf;
+import behaviour.nodes.Leaf;
 
 public class Log extends Leaf {
     public String message;

@@ -1,7 +1,7 @@
 package behaviour.nodes.actions;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Leaf;
+import behaviour.nodes.Leaf;
 import environment.Tile;
 import javafx.scene.paint.Color;
 import pathfinding.Point2D;

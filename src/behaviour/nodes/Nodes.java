@@ -1,11 +1,11 @@
 package behaviour.nodes;
 
 import behaviour.nodes.actions.*;
-import behaviour.nodes.base.Node;
 import behaviour.nodes.composites.Selector;
 import behaviour.nodes.composites.Sequence;
 import behaviour.nodes.conditionals.IsTargetValid;
 import behaviour.nodes.conditionals.OnTarget;
+import behaviour.nodes.conditionals.TargetInRange;
 import behaviour.nodes.decorators.Inverter;
 import behaviour.nodes.decorators.Repeater;
 import entities.Species;
@@ -64,9 +64,9 @@ public class Nodes {
     }*/
 
     public static Node getPathAndFollow() {
-        return Nodes.sequence(
-                Nodes.getPath(),
-                Nodes.followPath()
+        return sequence(
+                    getPath(),
+                    followPath()
         );
     }
 
@@ -80,5 +80,13 @@ public class Nodes {
         Inverter inverter = new Inverter();
         inverter.child =child;
         return inverter;
+    }
+
+    public static Node targetInRange(int range) {
+        return new TargetInRange(range);
+    }
+
+    public static Node waitTicks(int i) {
+        return new Wait(i);
     }
 }

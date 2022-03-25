@@ -1,11 +1,10 @@
 package behaviour.nodes.actions;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Leaf;
+import behaviour.nodes.Leaf;
 import entities.Entity;
 import entities.Species;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 import pathfinding.Point2D;
 
 import java.util.*;
@@ -89,31 +88,6 @@ public class SpeciesInRange extends Leaf {
         return (int) (Math.sqrt(2) * _min) + (_max - _min);
     }
 
-    /*@Deprecated
-    private List<Pair<Point2D, Integer>> spiralCheck() {
-        List<Pair<Point2D, Integer>> points = new ArrayList<>();
-
-        Point2D o = owner.position();
-
-        for (int i = o.x - bb.visionRange; i < o.x + bb.visionRange; i++)
-            for (int j = o.y - bb.visionRange; j < o.y + bb.visionRange; j++) {
-
-                int distance = distance(o.x, i, o.y, j);
-                if (distance > bb.visionRange)
-                    continue;
-
-                if (!owner.tile().grid().isCoordValid(i,j))
-                    continue;
-
-                for (Entity entity : owner.tile().grid().tile(i,j).getEntities())
-                    if (bb.food.contains(entity.getSpecies()))
-                        points.add(new Pair<>(new Point2D(i,j), distance));
-            }
-
-        points.sort(Comparator.comparing(Pair::getValue));
-        return points;
-    }*/
-
     // Only returns the first target
     private boolean checkPoint(List<Point2D> pointList, int x, int y) {
 
@@ -128,7 +102,7 @@ public class SpeciesInRange extends Leaf {
         if (DEBUG_COLOR) owner.tile().grid().tile(new Point2D(x,y)).setColor(Color.DARKKHAKI);
 
         for (Entity entity : owner.tile().grid().tile(x,y).getEntities())
-            if (toCheck.contains(entity.getSpecies())) {
+            if (toCheck.contains(entity.specie())) {
                 pointList.add(new Point2D(x,y));
                 return true;
             }

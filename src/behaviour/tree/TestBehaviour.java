@@ -1,7 +1,7 @@
 package behaviour.tree;
 
 import behaviour.nodes.Nodes;
-import behaviour.nodes.base.Node;
+import behaviour.nodes.Node;
 import entities.Entity;
 import entities.Species;
 
@@ -16,7 +16,6 @@ public class TestBehaviour extends BehaviourTree {
     }
 
     private void setupBlackboard() {
-
     }
 
     private Node buildTree() {
@@ -33,12 +32,15 @@ public class TestBehaviour extends BehaviourTree {
                     //Nodes.isTargetReached(),
                     Nodes.eat(Species.CARROT)
                 ),
-                /*Nodes.sequence(
-                    Nodes.getFirstSpeciesInRange(10, Species.RABBIT),
+                Nodes.sequence(
+                    Nodes.waitTicks(5),
+                    Nodes.getFirstSpeciesInRange(5, Species.RABBIT),
+                    //Nodes.inverter(//Nodes.targetInRange(5),
+                    //Nodes.inverter(Nodes.onTarget()),
                     Nodes.getPathAndFollow()
-                    Nodes.isTargetReached(),
-                    Nodes.reproduce()
-                ),*/
+                    //Nodes.isTargetReached(),
+                    //Nodes.reproduce()
+                ),
                 Nodes.sequence( // GET RANDOM POINT IN RANGE, GO TO POINT
                     Nodes.selector(
                         Nodes.sequence(

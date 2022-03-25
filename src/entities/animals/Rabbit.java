@@ -4,7 +4,6 @@ import behaviour.tree.TestBehaviour;
 import entities.Entity;
 import entities.Species;
 import environment.Tile;
-import javafx.util.Pair;
 import pathfinding.Point2D;
 import utils.Utils;
 
@@ -17,9 +16,10 @@ public class Rabbit extends Animal {
 
     public Rabbit(Tile tile) {
         super(tile);
+
         priorityMap.put(Species.CARROT, 50);
-        priorityMap.put(Species.RABBIT, 0);// carrot value
-        consumables.add(Species.CARROT);
+        priorityMap.put(Species.RABBIT, 10);// carrot value
+
         species = Species.RABBIT;
         size = 1;
         health = 100;
@@ -34,29 +34,29 @@ public class Rabbit extends Animal {
 
     @Override
     public void computePriority() {
-
-        priorityList.clear();
-        priorityList.add(0);
-
-        /*List<Entity> l = spiralCheck(50);
+        List<Entity> l = spiralCheck(15);
         for (Entity target : l) {
             int distance = (int)calculateDistance(target.position());
-            if (distance != 0) {
-                priorityList.add(priorityMap.get(target.specie()) / distance);
-            } else {
-                priorityList.add(priorityMap.get(target.specie()));
-            }
+            if (distance != 0)
+                subPQ.add(priorityMap.get(target.specie()) / distance);
+            else
+                subPQ.add(priorityMap.get(target.specie()));
         }
 
-        priorityList.sort(Collections.reverseOrder());*/
+        for (int i = 0; i < PRIORITY_SIZE; i++)
+            if (!subPQ.isEmpty())
+                priority[i] = subPQ.poll();
+            else
+                priority[i] = 0;
+
     }
 
     @Override
     public boolean eat(Entity target) {
         super.eat(target);
-        health += 10;
+        health += 25;
         Tile t = Utils.random(tile.grid().getNeighbours(tile));
-        if (!t.isObstacle())
+        if (!t.isObstacle() && rand.nextDouble() < 0.5f)
             t.addEntity(new Rabbit(t));
         return true;
     }
@@ -70,7 +70,7 @@ public class Rabbit extends Animal {
     }
 
     private List<Entity> spiralCheck(int range) {
-        List<Entity> entityList = new ArrayList<>();
+        List<Entity> entityList = new LinkedList<>();
 
         Point2D o = position();
 

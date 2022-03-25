@@ -10,7 +10,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         Simulation simulation = new Simulation();
-        simulation.populateSimulation(  30);
+        simulation.populateSimulation(  50);
 
         Pane context = simulation.getGrid().getContext();
         Scene scene = new Scene(context);
@@ -18,11 +18,11 @@ public class Main extends Application {
         Thread test = new Thread(() -> {
 
             long start = System.nanoTime();
-            long rate = 20;
+            long rate = 60;
             for (long i = 0;; i++) {
                 Platform.runLater(simulation::update);
+                //simulation.update();
                 long end = start + i * 1000000000L / rate;
-                //noinspection StatementWithEmptyBody
                 while (System.nanoTime() < end);
             }
         });

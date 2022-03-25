@@ -1,11 +1,8 @@
 package behaviour.nodes.actions;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Leaf;
+import behaviour.nodes.Leaf;
 import entities.Entity;
-import entities.Species;
-import environment.Tile;
-import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import pathfinding.Point2D;
 
@@ -65,7 +62,7 @@ public class TargetSpecies extends Leaf {
                     continue;
 
                 for (Entity entity : owner.tile().grid().tile(i,j).getEntities())
-                    if (bb.food.contains(entity.getSpecies()))
+                    if (bb.food.contains(entity.specie()))
                         points.add(new Pair<>(new Point2D(i,j), distance));
             }
 

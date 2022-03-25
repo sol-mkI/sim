@@ -1,13 +1,10 @@
 package entities;
 
-import java.util.ArrayList;
 import environment.Tile;
 import pathfinding.Point2D;
 
-import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Random;
-
-import static java.lang.Math.*;
 
 public abstract class Entity implements Comparable<Entity> {
 
@@ -17,8 +14,13 @@ public abstract class Entity implements Comparable<Entity> {
     // Base
     protected Tile tile;
     protected Species species;
-    public final List<Integer> priorityList = new ArrayList<>();
 
+    // Prioritat
+    protected static final int PRIORITY_SIZE = 5;
+    protected final int[] priority = new int[PRIORITY_SIZE];
+    protected final PriorityQueue<Integer> subPQ = new PriorityQueue<>();
+
+    // Atributs
     private final int maxHealth = Integer.MAX_VALUE;
     protected int health;
     protected int size;
@@ -27,18 +29,8 @@ public abstract class Entity implements Comparable<Entity> {
         this.tile = tile;
     }
 
-    public void computePriority() {
-        // Reset priorities every frame
-        priorityList.clear();
-        priorityList.add(0);
-    }
-
+    public abstract void computePriority();
     public abstract void update();
-
-    public Species getSpecies() {
-        return species;
-    }
-
 
     public void recieveDamage(int amount) {
         health -= amount;
@@ -54,21 +46,12 @@ public abstract class Entity implements Comparable<Entity> {
         return species;
     }
     public Tile tile() {return tile;}
-
     public void move(Tile tile) {
-        tryMove(tile);
         this.tile = tile;
     }
 
-    private void tryMove(Tile tile) {
-    }
-
-    private int eaten = 0;
     public boolean eat(Entity target) {
-        //TODO: Add benefit to entity eating.
         target.die();
-        eaten++;
-        //?Failed eating?
         return true;
     }
     public int size() {
@@ -77,13 +60,13 @@ public abstract class Entity implements Comparable<Entity> {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + eaten;
+        return getClass().getSimpleName();
     }
 
     @Override
     public int compareTo(Entity o) {
-        for (int i = 0; i < min(priorityList.size(), o.priorityList.size()); i++) {
-            int value = Double.compare(o.priorityList.get(i), priorityList.get(i));
+        for (int i = 0; i < PRIORITY_SIZE; i++) {
+            int value = Integer.compare(o.priority[i], priority[i]);
             if (value != 0)
                 return value;
         }

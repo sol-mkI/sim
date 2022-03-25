@@ -16,6 +16,4 @@ public class Blackboard {
     public List<Species> food;
 
     public int visionRange;
-
-
 }

@@ -1,8 +1,8 @@
 package behaviour.nodes.composites;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Composite;
-import behaviour.nodes.base.Node;
+import behaviour.nodes.Composite;
+import behaviour.nodes.Node;
 
 public class Selector extends Composite {
     int current;

@@ -42,9 +42,12 @@ public class Simulation implements ViewRenderer {
     long frame = 0;
     public void update() {
         long t0 = System.nanoTime();
+
         step();
         render();
         setupEntities();
+
+        //region Frame counter
         long t1 = System.nanoTime();
 
         AtomicInteger a = new AtomicInteger(0);
@@ -56,12 +59,10 @@ public class Simulation implements ViewRenderer {
                 v.getAndIncrement();
         });
         System.out.println("F" + ++frame + " in " + (t1-t0)/1e6 + " ms.    " + a + " animals and " + v + " vegetals.");
+        //endregion
     }
 
-    @Override
-    public void remove(Entity entity) {
-        pq.remove(entity);
-    }
+
 
     public void render() {
         grid.render();
@@ -73,12 +74,15 @@ public class Simulation implements ViewRenderer {
             pq.offer(entity);
         }
     }
-
     private void step() {
         while (!pq.isEmpty())
             pq.poll().update();
     }
 
+    @Override
+    public void remove(Entity entity) {
+        pq.remove(entity);
+    }
     public Grid getGrid() {return grid;}
 
 }

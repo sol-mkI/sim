@@ -1,7 +1,7 @@
 package behaviour.nodes.decorators;
 
 import behaviour.tree.State;
-import behaviour.nodes.base.Node;
+import behaviour.nodes.Node;
 
 public class Root extends Node {
 
