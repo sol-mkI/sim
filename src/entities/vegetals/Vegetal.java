@@ -1,12 +1,18 @@
 package entities.vegetals;
 
+import behaviour.tree.BehaviourTree;
 import entities.Entity;
-import environment.Tile;
 
+/**
+ * Vegetal version of an entity.
+ */
 public abstract class Vegetal extends Entity {
-    public Vegetal(Tile tile) {
-        super(tile);
+    public Vegetal(BehaviourTree behaviour) {
+        super(behaviour);
     }
 
-    abstract void tryReproduce(boolean b);
+    @Override
+    public void update() {
+        behaviour.update(this);
+    }
 }

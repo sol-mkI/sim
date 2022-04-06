@@ -8,6 +8,9 @@ import entities.Species;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * If there is an entity of a given species in the same tile, it dies and the owner entity gets a bonus.
+ */
 public class EatSpecies extends Leaf {
 
     private final List<Species> toEat;
@@ -27,14 +30,17 @@ public class EatSpecies extends Leaf {
     }
 
     @Override
-    public State onUpdate() {
-        for (Entity entity : owner.tile().getEntities())
-            for (Species species : toEat)
-                if (entity.specie().equals(species)) {
-                    bb.target = null;
-                    return owner.eat(entity) ? State.SUCCESS : State.FAILURE;
-                }
-
+    public State onUpdate(Entity entity) {
+        for (Entity target : em.retrieveEntities(entity.position())) {
+            Species s = target.specie();
+            if (toEat.contains(s)) {
+                em.removeEntity(target);
+                if(entity.checkAtt("health") < 50)
+                    entity.incrementAtt("health", bb.foodValues.get(s));
+                bb.target = null;
+                return State.SUCCESS;
+            }
+        }
         return State.FAILURE;
     }
 }

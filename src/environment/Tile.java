@@ -1,39 +1,58 @@
 package environment;
 
 import entities.Entity;
-import entities.animals.Animal;
 import entities.vegetals.Vegetal;
 import pathfinding.Node;
-import pathfinding.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+/**
+ * A container that keeps a collection of entities in a position.
+ */
 public class Tile extends Node {
 
     private static final boolean DEBUG = true;
 
-    private final Grid grid;
-    private final ViewRenderer viewRenderer;
+    /**
+     * JavaFx context
+     */
     private final TileContext tileContext;
+    /**
+     * If any entity can get inside this tile.
+     */
     private final boolean walkable;
+    /**
+     * Position of the tile within an environment.
+     */
     private final Point2D position;
 
-
+    /**
+     * Collection of entities in this tile.
+     */
     private final List<Entity> entityList = new ArrayList<>();
+    /**
+     * Max entity load that a tile can hold.
+     */
     private final static int CAPACITY = 5;
+    /**
+     * Current entity load.
+     */
     private int currentSize = 0;
 
-    public Tile(ViewRenderer viewRenderer, Grid grid, boolean walkable, Point2D position, int size) {
-        this.viewRenderer = viewRenderer;
-        this.grid = grid;
+    /**
+     * Constructor with parameters.
+     */
+    public Tile(boolean walkable, Point2D position, int size) {
         this.walkable = walkable;
         this.position = position;
         this.tileContext = new TileContext(position, size);
     }
 
+    /**
+     * If there is any change in the tile, add a color to the context.
+     */
     public void render() {
         if (isObstacle())
             tileContext.addColor(Color.LIGHTSLATEGREY);
@@ -57,97 +76,76 @@ public class Tile extends Node {
         tileContext.setColor(Color.LIGHTGREY);
     }
 
-    //region EntityManagement
-
+    /**
+     * Removes an entity from this tile.
+     */
     public void removeEntity(Entity entity) {
         entityList.remove(entity);
-        viewRenderer.remove(entity);
         currentSize -= entity.size();
     }
-    public boolean addEntity(Entity entity) {
-        if (canFit(entity)) {
-            currentSize += entity.size();
-            return entityList.add(entity);
-        }
-        return false;
-    }
-    public boolean moveEntity(Entity entity, Point2D target) {
-        if (grid.tile(target).addEntity(entity)) {
-            removeEntity(entity);
-            entity.move(grid.tile(target));
-            return true;
-        }
-        return false;
-    }
-    public boolean canFit(Entity entity) {
-        return (currentSize + entity.size()) < CAPACITY;
+
+    /**
+     * Tries to add an entity to this tile.
+     */
+    public void addEntity(Entity entity) {
+        if (!canFit(entity)) return;
+        currentSize += entity.size();
+        entityList.add(entity);
     }
 
-
-
-    //endregion
-    //region Getters
-
-    public Collection<? extends Entity> getEntities() {
-        return entityList;
+    /**
+     * Pathfinding penalty to traverse this tile.
+     * @return amount
+     */
+    @Override
+    public int penalty() {
+        // Makes pathfinder evade this node if entities present.
+        return entityList.size() * 10;
     }
+
+    /**
+     * Returns the location of this tile.
+     */
     public Point2D location() {
         return position.getLocation();
     }
 
-    @Override
-    public int penalty() {
-        // Makes pathfinder evade this node.
-        return entityList.size() * 10;
-        /*int penalty = 0;
-        for (Entity entity : getEntities()) {
-            penalty += entity instanceof Animal ? 1 : 0;
-        }
+    /**
+     * Checks whether an entity can fit inside this tile.
+     */
+    public boolean canFit(Entity entity) {return (currentSize + entity.size()) < CAPACITY;}
 
-        return penalty != 0 ? Integer.MAX_VALUE : 0;*/
-    }
-
-    public Grid grid() {
-        return grid;
-    }
+    /**
+     * Checks whether this tile is traversable.
+     */
     public boolean isObstacle() {
         return !walkable;
     }
 
+    /**
+     * Returns x coordinate of this tile
+     */
     @Override
-    public boolean canTraverse(Entity entity) {
-        return canFit(entity);
-    }
+    public int getX() {return position.getX();}
 
+    /**
+     * Returns y coordinate of this tile.
+     */
     @Override
-    public int getX() {
-        return position.x;
-    }
-    @Override
-    public int getY() {
-        return position.y;
-    }
-    public Pane getContext() {
-        return tileContext;
-    }
+    public int getY() {return position.getY();}
 
-    //endregion
-    //region Setters
-    public void setColor(Color color) {
-        tileContext.addColor(color);
-    }
-    //endregion
-    //region Misc
+    /**
+     * Getter for the javafx context of this tile.
+     */
+    public Pane getContext() {return tileContext;}
 
-    @Override
-    public String toString() {
-        return "Tile{" +
-                "walkable=" + walkable +
-                ", position=" + position +
-                ", entityList=" + entityList +
-                '}';
-    }
+    /**
+     * Enqueues a color to this tile.
+     */
+    public void setColor(Color color) {tileContext.addColor(color);}
 
-
-    //endregion
+    /**
+     * Returns a list with the entities of this tile.
+     */
+    public List<Entity> getEntities() {return entityList;}
 }

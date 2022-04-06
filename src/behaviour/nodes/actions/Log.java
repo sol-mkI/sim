@@ -2,7 +2,11 @@ package behaviour.nodes.actions;
 
 import behaviour.tree.State;
 import behaviour.nodes.Leaf;
+import entities.Entity;
 
+/**
+ * Logs a message and returns SUCCESS.
+ */
 public class Log extends Leaf {
     public String message;
     @Override
@@ -16,7 +20,7 @@ public class Log extends Leaf {
     }
 
     @Override
-    public State onUpdate() {
+    public State onUpdate(Entity entity) {
         System.out.println("OnUpdate{" + message + "}");
         return State.SUCCESS;
     }

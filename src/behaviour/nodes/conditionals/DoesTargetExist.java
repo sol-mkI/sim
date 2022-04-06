@@ -1,13 +1,13 @@
 package behaviour.nodes.conditionals;
 
-import behaviour.nodes.Leaf;
 import behaviour.tree.State;
+import behaviour.nodes.Leaf;
 import entities.Entity;
 
 /**
- * Checks whether the owner entity is at the target position.
+ * Checks whether a target exists.
  */
-public class OnTarget extends Leaf {
+public class DoesTargetExist extends Leaf {
     @Override
     public void onStart() {
         if (DEBUG) System.out.print(getClass().getSimpleName() + " ");
@@ -15,13 +15,12 @@ public class OnTarget extends Leaf {
 
     @Override
     public void onStop() {
-        if (DEBUG) System.out.print(state);
+        if (DEBUG) System.out.println(state);
     }
 
     @Override
     public State onUpdate(Entity entity) {
-        if (bb.target == null) return State.FAILURE;
-        if (!entity.position().equals(bb.target.position()))
+        if (bb.target == null)
             return State.FAILURE;
         return State.SUCCESS;
     }

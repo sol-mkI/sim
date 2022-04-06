@@ -4,8 +4,8 @@ import behaviour.tree.State;
 import behaviour.nodes.Leaf;
 import entities.Entity;
 import entities.Species;
-import javafx.scene.paint.Color;
-import pathfinding.Point2D;
+import environment.Point2D;
+import utils.Utils;
 
 import java.util.*;
 
@@ -13,9 +13,13 @@ import java.util.*;
 // Target first food species in range.
 // If no food target is null.
 
+/**
+ * Checks for entities of some given Species in a given range and targets the first found.
+ */
 public class SpeciesInRange extends Leaf {
 
     private Point2D pos;
+    private Point2D origin;
     private final int range;
     private final int ITERATIONS;
     private final List<Species> toCheck;
@@ -29,7 +33,7 @@ public class SpeciesInRange extends Leaf {
     @Override
     public void onStart() {
         if (DEBUG) System.out.print(getClass().getSimpleName() + " ");
-        pos = owner.position();
+
     }
 
     @Override
@@ -38,13 +42,20 @@ public class SpeciesInRange extends Leaf {
     }
 
     @Override
-    public State onUpdate() {
-        List<Point2D> entityList = spiralIteration();
+    public State onUpdate(Entity entity) {
+        pos = entity.position();
+        origin = entity.position();
 
-        if (entityList.isEmpty())
+        List<Point2D> points = spiralIteration();
+
+        if (points.isEmpty())
             return State.FAILURE;
 
-        bb.target = entityList.get(0);
+        for (Entity e : em.retrieveEntities(points.get(0))) {
+            if (toCheck.contains(e.specie()))
+                bb.target = e;
+        }
+
         return State.SUCCESS;
     }
 
@@ -55,15 +66,16 @@ public class SpeciesInRange extends Leaf {
         int deltaX = 1, deltaY = 0;
         int segmentLength = 1;
 
-        int x = pos.x, y = pos.y;
+        //int x = pos.x, y = pos.y;
         int segmentPassed = 0;
 
         for (int k = 0; ITERATIONS > k; ++k) {
-            x += deltaX;
-            y += deltaY;
+            //pos.x += deltaX;
+            //pos.y += deltaY;
+            pos.add(deltaX, deltaY);
             ++segmentPassed;
 
-            if (checkPoint(pointList, x, y))
+            if (checkPoint(pointList))
                 break;
 
             if (segmentPassed == segmentLength) {
@@ -80,32 +92,15 @@ public class SpeciesInRange extends Leaf {
         return pointList;
     }
 
-    public int distance(int x1, int x2, int y1, int y2) {
-        int dx = Math.abs(x2 - x1);
-        int dy = Math.abs(y2 - y1);
-        int _min = Math.min(dx, dy);
-        int _max = Math.max(dx, dy);
-        return (int) (Math.sqrt(2) * _min) + (_max - _min);
-    }
-
     // Only returns the first target
-    private boolean checkPoint(List<Point2D> pointList, int x, int y) {
+    private boolean checkPoint(List<Point2D> pointList) {
 
-
-        if (!owner.tile().grid().isCoordValid(x,y))
+        if (!em.isPositionValid(pos) || Utils.distance(origin, pos) > range)
             return false;
 
-        int distance = distance(pos.x, x, pos.y, y);
-        if (distance > range)
-            return false;
-
-        if (DEBUG_COLOR) owner.tile().grid().tile(new Point2D(x,y)).setColor(Color.DARKKHAKI);
-
-        for (Entity entity : owner.tile().grid().tile(x,y).getEntities())
-            if (toCheck.contains(entity.specie())) {
-                pointList.add(new Point2D(x,y));
-                return true;
-            }
+        for (Entity entity : em.retrieveEntities(pos))
+            if (toCheck.contains(entity.specie()))
+                return pointList.add(pos);
 
         return false;
     }

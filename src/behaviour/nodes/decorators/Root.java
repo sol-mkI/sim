@@ -2,7 +2,11 @@ package behaviour.nodes.decorators;
 
 import behaviour.tree.State;
 import behaviour.nodes.Node;
+import entities.Entity;
 
+/**
+ * Root node, only updates and passes the state of its child.
+ */
 public class Root extends Node {
 
     public Node child;
@@ -18,7 +22,7 @@ public class Root extends Node {
     }
 
     @Override
-    public State onUpdate() {
-        return child.update();
+    public State onUpdate(Entity entity) {
+        return child.update(entity);
     }
 }

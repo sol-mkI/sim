@@ -1,38 +1,54 @@
 package entities.animals;
 
+import behaviour.tree.BehaviourTree;
+import entities.Detection;
 import entities.Entity;
+import entities.EntityManager;
 import entities.Species;
-import environment.Tile;
-import pathfinding.Point2D;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+/**
+ * Animal version of an Entity.
+ */
 public abstract class Animal extends Entity {
 
-    protected final Point2D direction = new Point2D();
-    protected Tile prevTile = null;
+    /**
+     * Cache all entities within sight at the priority calculation step.
+     */
+    List<Detection> withinSight = new ArrayList<>();
+    /**
+     * Priority action values for interaction with species.
+     */
+    protected final Map<Species, Integer> priorityMap = new HashMap<>();
 
-    protected Animal(Tile tile) {
-        super(tile);
+    public Animal(BehaviourTree behaviour) {
+        super(behaviour);
     }
 
     @Override
     public void update() {
-        updateDirection();
+        behaviour.update(this);
     }
 
-    protected double calculateDistance(Point2D target) {
-        double ac = Math.abs(target.y - tile.getY());
-        double cb = Math.abs(target.x - tile.getX());
-        return Math.hypot(ac, cb);
-    }
+    @Override
+    public void computePriority(List<Detection> detectionList) {
+        priorityList.clear();
+        for (Detection detection : withinSight = detectionList) {
+            int priority = priorityMap.get(
+                    detection.detected().specie())
+                    /
+                    detection.distance() != 0 ?
+                    detection.distance() :
+                    1;
 
-    private void updateDirection() {
-        if (prevTile == null) prevTile = tile;
-        direction.x = Integer.compare(prevTile.getX(), tile.getX());
-        direction.y = Integer.compare(prevTile.getY(), tile.getY());
-        prevTile = tile;
+            if (priorityList.size() == PRIORITY_SIZE) {
+                int index = priorityList.size() - 1;
+                if (priorityList.get(index) < priority)
+                    priorityList.set(index, priority);
+            } else {
+                priorityList.add(priority);
+            }
+        }
     }
-
 }

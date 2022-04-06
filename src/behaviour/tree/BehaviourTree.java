@@ -5,26 +5,57 @@ import behaviour.nodes.Decorator;
 import behaviour.nodes.Node;
 import behaviour.nodes.decorators.Root;
 import entities.Entity;
+import entities.EntityManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BehaviourTree {
-    public Node root;
-    public State state;
-    public Entity owner;
-    public Blackboard bb = new Blackboard();
+/**
+ * Base behaviour tree.
+ */
+public abstract class BehaviourTree {
 
+    /**
+     * Root Node of the tree
+     */
+    protected Node root;
+    /**
+     * Current state of the tree
+     */
+    private State state;
+    /**
+     * Interface for the tree to operate on an entity.
+     */
+    private final EntityManager em;
+    /**
+     * Collection of values relative to an entity.
+     */
+    protected final Blackboard bb = new Blackboard();
 
-    public State update() {
-        if (root.state == State.RUNNING) {
-            state = root.update();
-        }
+    /**
+     * Constructor
+     */
+    public BehaviourTree(EntityManager em) {
+        this.em = em;
+    }
+
+    /**
+     * Run a tick down the tree updating each node until success or failure.
+     */
+    public State update(Entity entity) {
+        if (root.state == State.RUNNING)
+            state = root.update(entity);
         return state;
     }
 
+    /**
+     * Returns a list with the children of a node.
+     * @param parent node
+     * @return children, empty list if no children
+     */
     public List<Node> getChildren(Node parent) {
         List<Node>  children = new ArrayList<>();
+
         if (parent instanceof Decorator) {
             Decorator decorator = (Decorator) parent;
             if (decorator.child != null)
@@ -41,20 +72,20 @@ public class BehaviourTree {
             Composite composite = (Composite) parent;
             return composite.children;
         }
+
         return children;
     }
 
-    public void bind() {
-        traverse(root);
-    }
-
-    private void traverse(Node node) {
+    /**
+     * Traverse the tree in preorder to assign variables to each node.
+     */
+    public void traverse(Node node) {
         if (node != null) {
             node.bb = bb;
-            node.owner = owner;
+            node.em = em;
             for (Node child : getChildren(node)) {
                 child.bb = bb;
-                child.owner = owner;
+                node.em = em;
                 traverse(child);
             }
         }

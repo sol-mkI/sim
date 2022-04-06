@@ -1,19 +1,20 @@
 package behaviour.tree;
 
+import entities.Entity;
 import entities.Species;
-import pathfinding.Point2D;
+import environment.Tile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Collection of values used in a behaviour tree for an entity within a TileEnvironment.
+ */
 public class Blackboard {
-    public Point2D target;
-    public Point2D lastTarget;
-    public Point2D randomTarget;
-    public Point2D foodTarget;
 
-    public List<Point2D> path;
-    public List<Species> obstacles;
-    public List<Species> food;
+    public Map<Species, Integer> foodValues = new HashMap<>();
 
-    public int visionRange;
+    public Entity target;
+    public List<Tile> path;
 }

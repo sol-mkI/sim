@@ -1,75 +1,116 @@
 package entities;
 
-import environment.Tile;
-import pathfinding.Point2D;
+import behaviour.tree.BehaviourTree;
+import environment.Point2D;
 
-import java.util.PriorityQueue;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * Base abstract class for any entity.
+ * */
 public abstract class Entity implements Comparable<Entity> {
 
     protected static final boolean DEBUG = true;
-    protected static final Random rand = new Random(System.nanoTime());
-
-    // Base
-    protected Tile tile;
+    /**
+     * Species of the entity.
+     */
     protected Species species;
-
-    // Prioritat
+    /**
+     * Current position of the entity.
+     */
+    protected Point2D position;
+    /**
+     * Max priority array size, increase to minimize collisions, performance drops.
+     */
     protected static final int PRIORITY_SIZE = 5;
-    protected final int[] priority = new int[PRIORITY_SIZE];
-    protected final PriorityQueue<Integer> subPQ = new PriorityQueue<>();
-
-    // Atributs
-    private final int maxHealth = Integer.MAX_VALUE;
-    protected int health;
+    /**
+     * Priority list used to compare entity action priority.
+     */
+    protected final List<Integer> priorityList = new ArrayList<>();
+    /**
+     * Map with attributes.
+     */
+    protected final Map<String, Integer> attributes = new HashMap<>();
+    /**
+     * Size of an entity.
+     */
     protected int size;
+    /**
+     * Interaction range of an entity.
+     */
+    protected int range;
+    /**
+     * Set behaviour of an entity.
+     */
+    protected BehaviourTree behaviour;
 
-    public Entity(Tile tile) {
-        this.tile = tile;
+    public Entity(BehaviourTree behaviour) {
+        this.behaviour = behaviour;
     }
-
-    public abstract void computePriority();
+    /**
+     * Abstract method, fills the priority array.
+     */
+    public abstract void computePriority(List<Detection> detectionList);
+    /**
+     * Abstract method, updates the entity to its next state.
+     */
     public abstract void update();
-
-    public void recieveDamage(int amount) {
-        health -= amount;
-        if (health <= 0)
-            die();
+    /**
+     * Setter for the position of an entity.
+     */
+    public void setPosition(Point2D p) {
+        this.position = p.getLocation();
+    }
+    /**
+     * Getter for the position.
+     */
+    public Point2D position() {return position.getLocation();}
+    /**
+     * Getter for the species.
+     */
+    public Species specie() {return species;}
+    /**
+     * Getter for the size.
+     */
+    public int size() {return size;}
+    public int visionRange() {return range;}
+    /**
+     * Getter for an attribute with a string.
+     * @param att att
+     */
+    public int checkAtt(String att) {
+        return attributes.get(att);
+    }
+    /**
+     * Increases the amount of an attribute.
+     */
+    public void incrementAtt(String att, int amount) {
+        attributes.merge(att, amount, Integer::sum);
     }
 
-    protected void die() {
-        tile.removeEntity(this);
-    }
-    public Point2D position() {return tile.location();}
-    public Species specie() {
-        return species;
-    }
-    public Tile tile() {return tile;}
-    public void move(Tile tile) {
-        this.tile = tile;
-    }
-
-    public boolean eat(Entity target) {
-        target.die();
-        return true;
-    }
-    public int size() {
-        return size;
+    /**
+     * Decreases the amount of an attribute.
+     */
+    public void decreaseAtt(String att, int amount) {
+        attributes.merge(att, -amount, Integer::sum);
     }
 
     @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
-
+    public String toString() {return getClass().getSimpleName();}
     @Override
     public int compareTo(Entity o) {
-        for (int i = 0; i < PRIORITY_SIZE; i++) {
-            int value = Integer.compare(o.priority[i], priority[i]);
+        int size = Math.min(priorityList.size(), o.priorityList.size());
+        for (int i = 0; i < size; i++) {
+            int value = Integer.compare(
+                    o.priorityList.get(i),
+                      priorityList.get(i));
+
             if (value != 0)
                 return value;
         }
-        return 0;
+        return Integer.compare(o.priorityList.size(), priorityList.size());
     }
 }
